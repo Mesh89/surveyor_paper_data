@@ -1,0 +1,4 @@
+delly #ff7f0e Delly
+manta #d62728 Manta
+smoove #7f7f7f Smoove
+surveyor #2ca02c SurVeyor 

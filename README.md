@@ -8,3 +8,9 @@ cd SurVeyor-0.9/
 cmake -DCMAKE_BUILD_TYPE=Release .
 make
 ```
+
+Download the human genome reference
+```
+cd ref
+wget https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+```
