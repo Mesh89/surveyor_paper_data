@@ -1,0 +1,5 @@
+ERR10310239 Bos Taurus 1
+ERR10310240 Bos Taurus 2 
+mus_musculus Mus Musculus 
+Minghui63 Rice 1
+Zhenshan97 Rice 2
