@@ -1,6 +1,35 @@
 import pysam, ssw
 import argparse
 
+# Patch __eq__ to handle None
+def _safe_eq(self, other):
+    if other is None or not hasattr(other, '_match'):
+        return False
+    return (
+        self._match == other._match and
+        self._mismatch == other._mismatch and
+        self._alphabet == other._alphabet
+    )
+ssw.ScoreMatrix.__eq__ = _safe_eq
+
+# Patch Aligner.__init__ to use `is None`
+_orig_init = ssw.Aligner.__init__
+def _init_fixed(self, reference=None, matrix=None, molecule="dna", gap_open=3, gap_extend=1):
+    self.reference = reference
+    self.matrix = matrix
+    self.molecule = molecule
+    if self.matrix is None and molecule is not None:
+        if molecule == "dna":
+            self.matrix = ssw.NucleotideScoreMatrix()
+        else:
+            raise ValueError("Unrecognized molecule type '%s'" % molecule)
+    self.gap_open = gap_open
+    self.gap_extend = gap_extend
+    if self.gap_open <= self.gap_extend:
+        raise ValueError("gap_open must always be greater than gap_extend")
+
+ssw.Aligner.__init__ = _init_fixed
+
 aligner = ssw.Aligner(matrix=ssw.NucleotideScoreMatrix(match=1, mismatch=-4), gap_open=6, gap_extend=1)
 
 def reverse_complement(seq):
