@@ -5,7 +5,7 @@ OUT_PREFIX=$4
 THREADS=$5
 
 mkdir -p $OUTDIR
-if ~/arm/bin/bcftools view -h "$VCF" | grep -q '^##FORMAT=<ID=FT,'; then
+if bcftools view -h "$VCF" | grep -q '^##FORMAT=<ID=FT,'; then
     # FT defined: require FT to be PASS
     echo "FT defined: require FT to be PASS"
     FILTER_EXPR="SVTYPE=='INV' && FT=='PASS'"
