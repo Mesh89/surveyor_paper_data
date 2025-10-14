@@ -1,0 +1,4 @@
+graphtyper2 #ff7f0e GraphTyper2
+paragraph #d62728 Paragraph
+svtyper #7f7f7f SVTyper
+surveyor #2ca02c SurVeyor
