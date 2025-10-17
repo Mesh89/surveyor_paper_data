@@ -5,4 +5,4 @@ Please execute
 python3 ../scripts/generate-xy-benchmark.py . figs/fig figs/callers.txt
 ```
 
-Fig. 6c will be in figs/
+Fig. 6c will be in figs/fig.DUP.pdf
