@@ -1,0 +1,7 @@
+cutesv #ff7f0e cuteSV wSEQ
+sniffles #1f77b4 Sniffles wSEQ
+surveyor #2ca02c SurVeyor wSEQ
+
+cutesv-ignore_seq - cuteSV woSEQ
+sniffles-ignore_seq - Sniffles woSEQ
+surveyor-ignore_seq - SurVeyor woSEQ
