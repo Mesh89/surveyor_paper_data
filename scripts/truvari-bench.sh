@@ -10,6 +10,7 @@
 #   -c : Path to the calls VCF (CVCF)
 #   -w : Working directory for intermediate files and results
 #   -r : Reference FASTA file (e.g. GRCh38)
+#   -p : Path to truvari executable
 #   -d : (Optional) File with truth IDs treated as DUP (BVCF-side reclassification)
 #   -D : (Optional) File with call IDs treated as DUP (CVCF-side reclassification)
 #
@@ -37,21 +38,22 @@ sv_precision() {
 # Parse command-line arguments.
 B_DUP_IDS=""
 C_DUP_IDS=""
-while getopts "b:c:w:r:d:D:" opt; do
+while getopts "b:c:w:r:p:d:D:" opt; do
     case $opt in
         b) BVCF="$OPTARG" ;;
         c) CVCF="$OPTARG" ;;
         w) WORKDIR="$OPTARG" ;;
         r) REFERENCE="$OPTARG" ;;
+        p) TRUVARI="$OPTARG" ;;
         d) B_DUP_IDS="$OPTARG" ;;
         D) C_DUP_IDS="$OPTARG" ;;
         *) echo "Usage: $0 -b <BVCF> -c <CVCF> -w <WORKDIR> -r <REFERENCE> [-d <B_DUP_IDS>]" && exit 1 ;;
     esac
 done
 
-if [[ -z "${BVCF:-}" || -z "${CVCF:-}" || -z "${WORKDIR:-}" || -z "${REFERENCE:-}" ]]; then
+if [[ -z "${BVCF:-}" || -z "${CVCF:-}" || -z "${WORKDIR:-}" || -z "${REFERENCE:-}" || -z "${TRUVARI:-}" ]]; then
     echo "Missing required arguments."
-    echo "Usage: $0 -b <BVCF> -c <CVCF> -w <WORKDIR> -r <REFERENCE> [-d <B_DUP_IDS>]"
+    echo "Usage: $0 -b <BVCF> -c <CVCF> -w <WORKDIR> -r <REFERENCE> -p <TRUVARI_PATH> [-d <B_DUP_IDS>]"
     exit 1
 fi
 
@@ -60,6 +62,7 @@ echo "Truth VCF: $BVCF"
 echo "Call VCF:  $CVCF"
 echo "Workdir:   $WORKDIR"
 echo "Reference: $REFERENCE"
+echo "Truvari path:   $TRUVARI"
 if [[ -n "$B_DUP_IDS" ]]; then
     echo "Duplication IDs file: $B_DUP_IDS"
 fi
@@ -93,7 +96,7 @@ filter_and_index 'INFO/SVTYPE=="DEL"' "$CVCF" "$WORKDIR/vcfs/CVCF_DEL.vcf.gz"
 if [ -d "$WORKDIR/results/del" ]; then rm -rf "$WORKDIR/results/del"; fi
 
 echo "Running truvari for deletions..."
-~/.local/bin/truvari bench \
+"$TRUVARI" bench \
     -b "$WORKDIR/vcfs/BVCF_DEL.vcf.gz" \
     -c "$WORKDIR/vcfs/CVCF_DEL.vcf.gz" \
     -o "$WORKDIR/results/del" \
@@ -164,7 +167,7 @@ fi
 #   Call: Merged INS+DUP from CVCF.
 echo "Benchmarking duplication sensitivity..."
 if [ -d "$WORKDIR/results/dup_sens" ]; then rm -rf "$WORKDIR/results/dup_sens"; fi
-~/.local/bin/truvari bench \
+"$TRUVARI" bench \
     -b "$WORKDIR/vcfs/BVCF_DUP.vcf.gz" \
     -c "$WORKDIR/vcfs/CVCF_INS_DUP.vcf.gz" \
     -o "$WORKDIR/results/dup_sens" \
@@ -176,7 +179,7 @@ if [ -d "$WORKDIR/results/dup_sens" ]; then rm -rf "$WORKDIR/results/dup_sens"; 
 #   Call: Only duplications from CVCF.
 echo "Benchmarking duplication precision..."
 if [ -d "$WORKDIR/results/dup_prec" ]; then rm -rf "$WORKDIR/results/dup_prec"; fi
-~/.local/bin/truvari bench \
+"$TRUVARI" bench \
     -b "$WORKDIR/vcfs/BVCF_INS_DUP.vcf.gz" \
     -c "$WORKDIR/vcfs/CVCF_DUP.vcf.gz" \
     -o "$WORKDIR/results/dup_prec" \
@@ -191,7 +194,7 @@ if [ -d "$WORKDIR/results/dup_prec" ]; then rm -rf "$WORKDIR/results/dup_prec"; 
 #   Call: Merged INS+DUP from CVCF.
 echo "Benchmarking insertion sensitivity..."
 if [ -d "$WORKDIR/results/ins_sens" ]; then rm -rf "$WORKDIR/results/ins_sens"; fi
-~/.local/bin/truvari bench \
+"$TRUVARI" bench \
     -b "$WORKDIR/vcfs/BVCF_INS.vcf.gz" \
     -c "$WORKDIR/vcfs/CVCF_INS_DUP.vcf.gz" \
     -o "$WORKDIR/results/ins_sens" \
@@ -203,7 +206,7 @@ if [ -d "$WORKDIR/results/ins_sens" ]; then rm -rf "$WORKDIR/results/ins_sens"; 
 #   Call: Only insertions from CVCF.
 echo "Benchmarking insertion precision..."
 if [ -d "$WORKDIR/results/ins_prec" ]; then rm -rf "$WORKDIR/results/ins_prec"; fi
-~/.local/bin/truvari bench \
+"$TRUVARI" bench \
     -b "$WORKDIR/vcfs/BVCF_INS_DUP.vcf.gz" \
     -c "$WORKDIR/vcfs/CVCF_INS.vcf.gz" \
     -o "$WORKDIR/results/ins_prec" \

@@ -1,0 +1,5 @@
+delly #ff7f0e Delly
+dragen #9467bd DRAGEN
+manta #d62728 Manta
+smoove #7f7f7f Smoove
+surveyor #2ca02c SurVeyor
