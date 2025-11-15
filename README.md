@@ -21,3 +21,5 @@ wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.27_G
 gunzip -k GCF_000001635.27_GRCm39_genomic.fna.gz
 unxz IRGSP-1.0_genomic.fna.xz
 ```
+
+Then, follow the instructions within the folder for the figure you intend to reproduce.
