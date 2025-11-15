@@ -7,6 +7,7 @@ cd SurVeyor-0.9/
 ./build_htslib.sh 
 cmake -DCMAKE_BUILD_TYPE=Release .
 make
+cd ..
 ```
 
 Download/unzip references
